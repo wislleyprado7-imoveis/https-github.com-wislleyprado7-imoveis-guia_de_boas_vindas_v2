@@ -1,0 +1,404 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --color-navy: #0F172A;
+  --color-gold: #B59449;
+  --color-ink: #1E293B;
+  --color-slate-custom: #F8FAFC;
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+}
+
+/* Custom design classes inspired by the Sleek Interface */
+.gold-accent {
+  color: #B59449;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  font-size: 10px;
+  text-transform: uppercase;
+}
+
+.hero-header {
+  font-family: 'Inter', sans-serif;
+  font-size: 56px;
+  font-weight: 800;
+  line-height: 0.95;
+  letter-spacing: -0.04em;
+  color: #0F172A;
+}
+
+.sleek-card {
+  background: white;
+  border: 1px solid #E2E8F0;
+  padding: 24px;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+  transition: all 0.2s ease-in-out;
+}
+
+.sleek-card:hover {
+  border-color: #B59449;
+  box-shadow: 0 4px 12px rgba(181, 148, 73, 0.08);
+}
+
+.btn-gold {
+  background-color: #B59449;
+  color: white;
+  padding: 12px 24px;
+  font-weight: 600;
+  font-size: 14px;
+  border: none;
+  border-radius: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  transition: all 0.2s;
+}
+
+.btn-gold:hover {
+  background-color: #9D7E3B;
+  cursor: pointer;
+}
+
+/* Sleek overrides for Admin panel forms and elements */
+
+/* Editor Panel Style */
+.sleek-editor-panel {
+  background-color: #FFFFFF !important;
+  border: 1px solid #E2E8F0 !important;
+}
+
+/* Form controls */
+.sleek-editor-panel input,
+.sleek-editor-panel textarea,
+.sleek-editor-panel select,
+.sleek-guests-panel input,
+.sleek-guests-panel textarea,
+.sleek-guests-panel select {
+  background-color: #F8FAFC !important;
+  border: 1px solid #CBD5E1 !important;
+  color: #0F172A !important;
+  border-radius: 8px !important;
+}
+
+.sleek-editor-panel input:focus,
+.sleek-editor-panel textarea:focus,
+.sleek-editor-panel select:focus,
+.sleek-guests-panel input:focus,
+.sleek-guests-panel textarea:focus,
+.sleek-guests-panel select:focus {
+  border-color: #B59449 !important;
+  outline: none !important;
+  box-shadow: 0 0 0 1px #B59449 !important;
+}
+
+/* Sidebar in Editor Panel */
+.sleek-editor-panel .md\:w-52 {
+  background-color: #F8FAFC !important;
+  border-right-color: #E2E8F0 !important;
+}
+
+/* Text and Titles */
+.sleek-editor-panel h3,
+.sleek-editor-panel h4,
+.sleek-guests-panel h3,
+.sleek-guests-panel h4 {
+  color: #0F172A !important;
+}
+
+.sleek-editor-panel p,
+.sleek-editor-panel label,
+.sleek-guests-panel p,
+.sleek-guests-panel label {
+  color: #475569 !important;
+}
+
+.sleek-editor-panel .text-white,
+.sleek-guests-panel .text-white {
+  color: #0F172A !important;
+}
+
+.sleek-editor-panel .text-slate-200,
+.sleek-guests-panel .text-slate-200 {
+  color: #1E293B !important;
+}
+
+.sleek-editor-panel .text-slate-400,
+.sleek-guests-panel .text-slate-400 {
+  color: #64748B !important;
+}
+
+/* Background replacements */
+.sleek-editor-panel .bg-slate-950,
+.sleek-guests-panel .bg-slate-950 {
+  background-color: #F8FAFC !important;
+  border: 1px solid #E2E8F0 !important;
+}
+
+.sleek-editor-panel .bg-slate-900,
+.sleek-guests-panel .bg-slate-900 {
+  background-color: #FFFFFF !important;
+  border: 1px solid #E2E8F0 !important;
+}
+
+.sleek-editor-panel .bg-slate-900\/40 {
+  background-color: #F8FAFC !important;
+}
+
+.sleek-guests-panel .bg-slate-900\/40 {
+  background-color: #FFFFFF !important;
+  border: 1px solid #E2E8F0 !important;
+}
+
+/* Dividers */
+.sleek-editor-panel .h-px,
+.sleek-editor-panel .border-slate-800,
+.sleek-guests-panel .border-slate-800,
+.sleek-guests-panel .h-px {
+  background-color: #E2E8F0 !important;
+  border-color: #E2E8F0 !important;
+}
+
+/* Buttons and icons */
+.sleek-editor-panel .text-amber-500,
+.sleek-guests-panel .text-amber-500 {
+  color: #B59449 !important;
+}
+
+.sleek-editor-panel .bg-amber-500,
+.sleek-guests-panel .bg-amber-500 {
+  background-color: #B59449 !important;
+  color: #FFFFFF !important;
+}
+
+.sleek-editor-panel .hover\:bg-slate-800:hover,
+.sleek-guests-panel .hover\:bg-slate-800:hover {
+  background-color: #E2E8F0 !important;
+  color: #0F172A !important;
+}
+
+.sleek-guests-panel .hover\:bg-slate-750:hover {
+  background-color: #F1F5F9 !important;
+}
+
+/* Guest Cards */
+.sleek-guests-panel .group {
+  background-color: #FFFFFF !important;
+  border-color: #E2E8F0 !important;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05) !important;
+}
+
+.sleek-guests-panel .group:hover {
+  border-color: #B59449 !important;
+}
+
+.sleek-guests-panel .bg-slate-950.border-slate-800 {
+  background-color: #F8FAFC !important;
+  border-color: #E2E8F0 !important;
+}
+
+.sleek-guests-panel .p-1\.5.text-slate-400 {
+  color: #64748B !important;
+}
+
+.sleek-guests-panel .p-1\.5.text-slate-400:hover {
+  color: #0F172A !important;
+  background-color: #F1F5F9 !important;
+}
+
+.sleek-guests-panel .py-1\.5.bg-slate-800 {
+  background-color: #F1F5F9 !important;
+  color: #1E293B !important;
+}
+
+.sleek-guests-panel .bg-emerald-500\/10 {
+  background-color: #DCFCE7 !important;
+  color: #166534 !important;
+  border-color: #BBF7D0 !important;
+}
+
+.sleek-guests-panel .bg-amber-500\/15 {
+  background-color: #FEF3C7 !important;
+  color: #92400E !important;
+  border-color: #FDE68A !important;
+}
+
+.sleek-guests-panel .bg-red-500\/10 {
+  background-color: #FEE2E2 !important;
+  color: #991B1B !important;
+  border-color: #FECACA !important;
+}
+
+.sleek-guests-panel .bg-blue-500\/10 {
+  background-color: #DBEAFE !important;
+  color: #1E40AF !important;
+  border-color: #BFDBFE !important;
+}
+
+/* Modals */
+.fixed.z-50 .bg-slate-900 {
+  background-color: #FFFFFF !important;
+  color: #1E293B !important;
+  border: 1px solid #E2E8F0 !important;
+}
+
+.fixed.z-50 h3 {
+  color: #B59449 !important;
+}
+
+.fixed.z-50 p {
+  color: #64748B !important;
+}
+
+.fixed.z-50 .text-slate-400 {
+  color: #64748B !important;
+}
+
+.fixed.z-50 .bg-slate-800 {
+  background-color: #F1F5F9 !important;
+  color: #1E293B !important;
+  border-color: #E2E8F0 !important;
+}
+
+.fixed.z-50 .bg-amber-500 {
+  background-color: #B59449 !important;
+  color: #FFFFFF !important;
+}
+
+/* Guest Guide Style overrides for Sleek Theme */
+.sleek-guest-guide {
+  background-color: #F8FAFC !important;
+  color: #1E293B !important;
+}
+
+/* Make cards white with subtle borders and shadows */
+.sleek-guest-guide .bg-slate-900,
+.sleek-guest-guide .bg-slate-900\/50,
+.sleek-guest-guide .bg-slate-900\/40 {
+  background-color: #FFFFFF !important;
+  border-color: #E2E8F0 !important;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05) !important;
+  color: #1E293B !important;
+}
+
+/* Inner containers (e.g. key-value blocks) */
+.sleek-guest-guide .bg-slate-950,
+.sleek-guest-guide .bg-slate-950\/40,
+.sleek-guest-guide .bg-slate-950\/50 {
+  background-color: #F8FAFC !important;
+  border-color: #E2E8F0 !important;
+  color: #1E293B !important;
+}
+
+/* State simulation bar at top of guest guide */
+.sleek-guest-guide > div.sticky {
+  background-color: #FFFFFF !important;
+  border-bottom: 1px solid #E2E8F0 !important;
+  color: #1E293B !important;
+}
+
+.sleek-guest-guide > div.sticky .text-slate-300,
+.sleek-guest-guide > div.sticky .text-slate-400 {
+  color: #475569 !important;
+}
+
+.sleek-guest-guide > div.sticky .bg-slate-950 {
+  background-color: #F1F5F9 !important;
+  border-color: #CBD5E1 !important;
+}
+
+.sleek-guest-guide > div.sticky button {
+  color: #475569 !important;
+}
+
+.sleek-guest-guide > div.sticky button.bg-amber-500 {
+  background-color: #B59449 !important;
+  color: #FFFFFF !important;
+}
+
+/* Headers and Titles */
+.sleek-guest-guide h1,
+.sleek-guest-guide h2,
+.sleek-guest-guide h3,
+.sleek-guest-guide h4 {
+  color: #0F172A !important;
+}
+
+/* Secondary texts */
+.sleek-guest-guide .text-slate-300,
+.sleek-guest-guide .text-slate-400,
+.sleek-guest-guide .text-slate-500,
+.sleek-guest-guide p {
+  color: #475569 !important;
+}
+
+/* Accents and highlights */
+.sleek-guest-guide .text-amber-500,
+.sleek-guest-guide .text-amber-400 {
+  color: #B59449 !important;
+}
+
+.sleek-guest-guide .bg-amber-500 {
+  background-color: #B59449 !important;
+  color: #FFFFFF !important;
+}
+
+.sleek-guest-guide .border-slate-800,
+.sleek-guest-guide .border-slate-900,
+.sleek-guest-guide .border-slate-700 {
+  border-color: #E2E8F0 !important;
+}
+
+/* Tabs Navigation Bar at the bottom */
+.sleek-guest-guide .fixed.bottom-0 {
+  background-color: #FFFFFF !important;
+  border-top: 1px solid #E2E8F0 !important;
+  box-shadow: 0 -4px 12px rgba(0,0,0,0.05) !important;
+}
+
+.sleek-guest-guide .fixed.bottom-0 button {
+  color: #64748B !important;
+}
+
+.sleek-guest-guide .fixed.bottom-0 button.text-amber-500 {
+  color: #B59449 !important;
+}
+
+/* Status overlays */
+.sleek-guest-guide .bg-amber-950\/40 {
+  background-color: #FEF3C7 !important;
+  border-color: #FDE68A !important;
+  color: #92400E !important;
+}
+
+.sleek-guest-guide .bg-amber-950\/40 p,
+.sleek-guest-guide .bg-amber-950\/40 h4,
+.sleek-guest-guide .bg-amber-950\/40 strong {
+  color: #92400E !important;
+}
+
+.sleek-guest-guide .bg-red-950\/30 {
+  background-color: #FEE2E2 !important;
+  border-color: #FECACA !important;
+  color: #991B1B !important;
+}
+
+.sleek-guest-guide .bg-red-950\/30 p,
+.sleek-guest-guide .bg-red-950\/30 h4,
+.sleek-guest-guide .bg-red-950\/30 strong {
+  color: #991B1B !important;
+}
+
+/* Copy buttons styling inside card */
+.sleek-guest-guide button.bg-slate-900,
+.sleek-guest-guide button.bg-slate-950 {
+  background-color: #F1F5F9 !important;
+  color: #1E293B !important;
+  border: 1px solid #E2E8F0 !important;
+}
+
+.sleek-guest-guide button.bg-slate-900:hover,
+.sleek-guest-guide button.bg-slate-950:hover {
+  background-color: #E2E8F0 !important;
+}
+
+

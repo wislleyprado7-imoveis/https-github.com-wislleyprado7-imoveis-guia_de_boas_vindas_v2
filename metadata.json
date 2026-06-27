@@ -1,0 +1,6 @@
+{
+  "name": "Guia de Boas-Vindas Rancho",
+  "description": "Plataforma digital mobile-first para anfitriões de propriedades de temporada gerenciarem guias de boas-vindas premium com acesso seguro baseado em check-in/out, senhas, localização e dicas de pesca.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
