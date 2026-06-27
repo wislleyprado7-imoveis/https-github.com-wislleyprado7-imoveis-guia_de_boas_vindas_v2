@@ -427,16 +427,45 @@ export default function GuestGuide({ guest, ranch, onBackToAdmin }: GuestGuidePr
                   </div>
                 )}
 
-                <a
-                  href={content.googleMapsLink}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-full flex items-center justify-center gap-2 p-3 bg-slate-950 hover:bg-slate-800 text-amber-500 font-sans font-medium text-xs rounded-2xl border border-slate-800 transition-colors"
-                >
-                  <MapPin size={14} />
-                  <span>Abrir no Google Maps</span>
-                  <ExternalLink size={12} className="ml-1" />
-                </a>
+                <div className="flex flex-col gap-2">
+                  {content.latitude && content.longitude && (
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                      <a
+                        href={`https://www.google.com/maps/dir/?api=1&destination=${content.latitude.trim()},${content.longitude.trim()}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center justify-center gap-2 p-3 bg-amber-500 hover:bg-amber-600 text-slate-950 font-sans font-bold text-xs rounded-2xl transition-all shadow active:scale-[0.98] cursor-pointer"
+                      >
+                        <MapPin size={14} />
+                        <span>Traçar Rota (Google Maps)</span>
+                        <ExternalLink size={12} />
+                      </a>
+                      <a
+                        href={`https://waze.com/ul?ll=${content.latitude.trim()},${content.longitude.trim()}&navigate=yes`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center justify-center gap-2 p-3 bg-sky-500 hover:bg-sky-600 text-slate-950 font-sans font-bold text-xs rounded-2xl transition-all shadow active:scale-[0.98] cursor-pointer"
+                      >
+                        <svg className="w-3.5 h-3.5 shrink-0 fill-current" viewBox="0 0 24 24">
+                          <path d="M19.344 11.5c.047-.417.078-.84.078-1.266 0-4.823-3.922-8.734-8.734-8.734-4.822 0-8.734 3.911-8.734 8.734 0 .911.144 1.785.405 2.607-.11.458-.291 1.259-.516 2.193-.243 1.011-.479 1.99-.452 2.213.067.551.52.971 1.077.971a1.2 1.2 0 00.324-.047c.604-.176 1.776-.566 2.871-.925a8.625 8.625 0 003.5 1.229 3.09 3.09 0 005.812-.008 8.618 8.618 0 003.738-1.423c1.078.353 2.222.723 2.808.89.1.028.204.043.308.043.557 0 1.01-.42 1.077-.971.027-.223-.209-1.202-.452-2.213a52.122 52.122 0 00-.516-2.193 8.683 8.683 0 00.784-2.105zm-14.734-.334c-.828 0-1.5-.672-1.5-1.5s.672-1.5 1.5-1.5 1.5.672 1.5 1.5-.672 1.5-1.5 1.5zm6.5 0c-.828 0-1.5-.672-1.5-1.5s.672-1.5 1.5-1.5 1.5.672 1.5 1.5-.672 1.5-1.5 1.5zm.39 3.868c-.147.218-.396.345-.658.345a.784.784 0 01-.43-.129 3.238 3.238 0 01-1.225-1.637.781.781 0 011.472-.514c.154.44.407.728.641.728.234 0 .487-.288.641-.728a.781.781 0 011.472.514 3.238 3.238 0 01-1.225 1.637l-.116.115z" />
+                        </svg>
+                        <span>Traçar Rota (Waze)</span>
+                        <ExternalLink size={12} />
+                      </a>
+                    </div>
+                  )}
+
+                  <a
+                    href={content.googleMapsLink}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-full flex items-center justify-center gap-2 p-3 bg-slate-950 hover:bg-slate-800 text-amber-500 font-sans font-medium text-xs rounded-2xl border border-slate-800 transition-colors cursor-pointer"
+                  >
+                    <MapPin size={14} />
+                    <span>Visualizar Link de Localização Completo</span>
+                    <ExternalLink size={12} className="ml-1" />
+                  </a>
+                </div>
               </div>
 
               {/* Normas da Casa (Rules) & Equipment List */}
