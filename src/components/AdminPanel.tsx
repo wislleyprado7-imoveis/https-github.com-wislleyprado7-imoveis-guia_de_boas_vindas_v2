@@ -31,6 +31,7 @@ import {
 } from "lucide-react";
 import QRCodeModal from "./QRCodeModal";
 import { formatDateBr } from "../utils";
+import { ImageUploader } from "./ImageUploader";
 
 interface AdminPanelProps {
   ranches: Ranch[];
@@ -511,15 +512,27 @@ export default function AdminPanel({
                         className="w-full text-xs bg-slate-950 border border-slate-800 rounded-lg p-3 text-white focus:outline-none focus:border-amber-500"
                       />
                     </div>
-                    <div>
-                      <label className="text-[10px] text-slate-400 uppercase tracking-wider block mb-1">URL da Imagem da Capa</label>
-                      <input
-                        type="text"
-                        value={selectedRanch.guideContent.heroImageUrl}
-                        onChange={e => updateGuideField("heroImageUrl", e.target.value)}
-                        className="w-full text-xs bg-slate-950 border border-slate-800 rounded-lg p-3 text-white focus:outline-none focus:border-amber-500 font-mono"
-                      />
-                      <p className="text-[9px] text-slate-500 mt-1">Insira um link direto de imagem do Unsplash ou similar.</p>
+                    <div className="space-y-4">
+                      <div>
+                        <label className="text-[10px] text-slate-400 uppercase tracking-wider block mb-1">URL da Imagem da Capa</label>
+                        <input
+                          type="text"
+                          value={selectedRanch.guideContent.heroImageUrl}
+                          onChange={e => updateGuideField("heroImageUrl", e.target.value)}
+                          className="w-full text-xs bg-slate-950 border border-slate-800 rounded-lg p-3 text-white focus:outline-none focus:border-amber-500 font-mono"
+                        />
+                        <p className="text-[9px] text-slate-500 mt-1">Insira um link direto de imagem do Unsplash ou faça o upload abaixo.</p>
+                      </div>
+
+                      <div className="bg-slate-950/40 p-3 rounded-xl border border-slate-800/60">
+                        <label className="text-[10px] text-amber-500 font-semibold uppercase tracking-wider block mb-1.5">Fazer Upload da Imagem da Capa</label>
+                        <ImageUploader
+                          currentUrl={selectedRanch.guideContent.heroImageUrl}
+                          onUploadSuccess={(url) => updateGuideField("heroImageUrl", url)}
+                          bucketName="ranch-images"
+                          label="Enviar Imagem de Capa"
+                        />
+                      </div>
                     </div>
 
                     {/* Preview banner */}
@@ -554,14 +567,26 @@ export default function AdminPanel({
                         placeholder="Escreva uma mensagem acolhedora..."
                       />
                     </div>
-                    <div>
-                      <label className="text-[10px] text-slate-400 uppercase tracking-wider block mb-1">Foto do Anfitrião (URL)</label>
-                      <input
-                        type="text"
-                        value={selectedRanch.guideContent.welcomePhotoUrl}
-                        onChange={e => updateGuideField("welcomePhotoUrl", e.target.value)}
-                        className="w-full text-xs bg-slate-950 border border-slate-800 rounded-lg p-3 text-white focus:outline-none focus:border-amber-500 font-mono"
-                      />
+                    <div className="space-y-4">
+                      <div>
+                        <label className="text-[10px] text-slate-400 uppercase tracking-wider block mb-1">Foto do Anfitrião (URL)</label>
+                        <input
+                          type="text"
+                          value={selectedRanch.guideContent.welcomePhotoUrl}
+                          onChange={e => updateGuideField("welcomePhotoUrl", e.target.value)}
+                          className="w-full text-xs bg-slate-950 border border-slate-800 rounded-lg p-3 text-white focus:outline-none focus:border-amber-500 font-mono"
+                        />
+                      </div>
+
+                      <div className="bg-slate-950/40 p-3 rounded-xl border border-slate-800/60">
+                        <label className="text-[10px] text-amber-500 font-semibold uppercase tracking-wider block mb-1.5">Fazer Upload da Foto do Anfitrião</label>
+                        <ImageUploader
+                          currentUrl={selectedRanch.guideContent.welcomePhotoUrl}
+                          onUploadSuccess={(url) => updateGuideField("welcomePhotoUrl", url)}
+                          bucketName="ranch-images"
+                          label="Enviar Foto do Anfitrião"
+                        />
+                      </div>
                     </div>
                   </div>
                 </div>
