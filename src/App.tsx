@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { Ranch, Guest, GuideContent } from "./types";
 import { INITIAL_RANCHES, INITIAL_GUESTS } from "./defaultData";
 import AdminPanel from "./components/AdminPanel";
@@ -285,6 +285,7 @@ export default function App() {
     }
 
     // Guest slug not found fallback
+    const isPreview = window.location.href.includes("preview=true");
     return (
       <div className="min-h-screen bg-slate-custom flex flex-col items-center justify-center text-center px-6">
         <div className="w-16 h-16 bg-red-100 text-red-600 rounded-full flex items-center justify-center mb-6 border border-red-200 shadow-sm">
@@ -294,12 +295,14 @@ export default function App() {
         <p className="text-sm text-slate-500 max-w-sm mb-6 leading-relaxed">
           O link de boas-vindas acessado expirou, está incorreto ou foi removido pelo anfitrião. Por favor, verifique com o proprietário do rancho.
         </p>
-        <button
-          onClick={navigateToAdmin}
-          className="py-2.5 px-6 rounded-xl bg-white hover:bg-slate-50 border border-slate-200 text-gold text-xs font-semibold font-sans transition-colors"
-        >
-          Ir para Painel Administrativo
-        </button>
+        {isPreview && (
+          <button
+            onClick={navigateToAdmin}
+            className="py-2.5 px-6 rounded-xl bg-white hover:bg-slate-50 border border-slate-200 text-gold text-xs font-semibold font-sans transition-colors"
+          >
+            Ir para Painel Administrativo
+          </button>
+        )}
       </div>
     );
   }
