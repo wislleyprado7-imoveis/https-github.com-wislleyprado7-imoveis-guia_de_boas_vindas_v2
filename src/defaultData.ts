@@ -160,7 +160,8 @@ export const INITIAL_GUESTS: Guest[] = [
     ranchId: "rancho-dourado",
     checkInDate: new Date().toISOString().split('T')[0], // Hoje
     checkOutDate: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000).toISOString().split('T')[0], // 3 dias a partir de hoje
-    isAlwaysUnlocked: false
+    isAlwaysUnlocked: false,
+    phone: "17991234567"
   },
   {
     id: "guest-2",
@@ -169,7 +170,8 @@ export const INITIAL_GUESTS: Guest[] = [
     ranchId: "rancho-tucunare",
     checkInDate: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000).toISOString().split('T')[0], // Daqui a 5 dias (Acesso Antecipado)
     checkOutDate: new Date(Date.now() + 8 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
-    isAlwaysUnlocked: false
+    isAlwaysUnlocked: false,
+    phone: "11988887777"
   },
   {
     id: "guest-3",
@@ -178,6 +180,7 @@ export const INITIAL_GUESTS: Guest[] = [
     ranchId: "rancho-dourado",
     checkInDate: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString().split('T')[0], // Já fez checkout
     checkOutDate: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
-    isAlwaysUnlocked: false
+    isAlwaysUnlocked: false,
+    phone: "34997766554"
   }
 ];

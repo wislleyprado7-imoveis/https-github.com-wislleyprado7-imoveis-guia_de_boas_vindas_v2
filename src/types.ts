@@ -87,4 +87,5 @@ export interface Guest {
   checkInDate: string; // YYYY-MM-DD
   checkOutDate: string; // YYYY-MM-DD
   isAlwaysUnlocked: boolean; // Liberar Acesso Total
+  phone?: string; // Telefone/WhatsApp do hóspede
 }

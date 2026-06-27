@@ -54,7 +54,8 @@ export default function App() {
             ranchId: g.ranch_id,
             checkInDate: g.check_in_date,
             checkOutDate: g.check_out_date,
-            isAlwaysUnlocked: g.is_always_unlocked
+            isAlwaysUnlocked: g.is_always_unlocked,
+            phone: g.phone || ""
           }));
 
           setRanches(loadedRanches);
@@ -74,17 +75,34 @@ export default function App() {
             }))
           );
 
-          await supabase.from("guests").insert(
-            INITIAL_GUESTS.map(g => ({
-              id: g.id,
-              name: g.name,
-              slug: g.slug,
-              ranch_id: g.ranchId,
-              check_in_date: g.checkInDate,
-              check_out_date: g.checkOutDate,
-              is_always_unlocked: g.isAlwaysUnlocked
-            }))
-          );
+          const seedWithPhone = INITIAL_GUESTS.map(g => ({
+            id: g.id,
+            name: g.name,
+            slug: g.slug,
+            ranch_id: g.ranchId,
+            check_in_date: g.checkInDate,
+            check_out_date: g.checkOutDate,
+            is_always_unlocked: g.isAlwaysUnlocked,
+            phone: g.phone || null
+          }));
+
+          const { error: insertError } = await supabase.from("guests").insert(seedWithPhone);
+          if (insertError) {
+            if (insertError.message.includes("phone") || insertError.message.includes("column") || insertError.code === "42703") {
+              const seedWithoutPhone = INITIAL_GUESTS.map(g => ({
+                id: g.id,
+                name: g.name,
+                slug: g.slug,
+                ranch_id: g.ranchId,
+                check_in_date: g.checkInDate,
+                check_out_date: g.checkOutDate,
+                is_always_unlocked: g.isAlwaysUnlocked
+              }));
+              await supabase.from("guests").insert(seedWithoutPhone);
+            } else {
+              throw insertError;
+            }
+          }
 
           setRanches(INITIAL_RANCHES);
           setGuests(INITIAL_GUESTS);
@@ -163,17 +181,36 @@ export default function App() {
         }
         
         if (newGuests.length > 0) {
-          await supabase.from("guests").upsert(
-            newGuests.map(g => ({
-              id: g.id,
-              name: g.name,
-              slug: g.slug,
-              ranch_id: g.ranchId,
-              check_in_date: g.checkInDate,
-              check_out_date: g.checkOutDate,
-              is_always_unlocked: g.isAlwaysUnlocked
-            }))
-          );
+          const payloadWithPhone = newGuests.map(g => ({
+            id: g.id,
+            name: g.name,
+            slug: g.slug,
+            ranch_id: g.ranchId,
+            check_in_date: g.checkInDate,
+            check_out_date: g.checkOutDate,
+            is_always_unlocked: g.isAlwaysUnlocked,
+            phone: g.phone || null
+          }));
+
+          const { error: upsertError } = await supabase.from("guests").upsert(payloadWithPhone);
+          
+          if (upsertError) {
+            if (upsertError.message.includes("phone") || upsertError.message.includes("column") || upsertError.code === "42703") {
+              console.warn("A coluna 'phone' nao existe no banco remoto. Salvando sem ela...");
+              const payloadWithoutPhone = newGuests.map(g => ({
+                id: g.id,
+                name: g.name,
+                slug: g.slug,
+                ranch_id: g.ranchId,
+                check_in_date: g.checkInDate,
+                check_out_date: g.checkOutDate,
+                is_always_unlocked: g.isAlwaysUnlocked
+              }));
+              await supabase.from("guests").upsert(payloadWithoutPhone);
+            } else {
+              throw upsertError;
+            }
+          }
         }
       } catch (err) {
         console.error("Erro ao sincronizar hóspedes no Supabase:", err);
@@ -206,17 +243,34 @@ export default function App() {
             }))
           );
 
-          await supabase.from("guests").insert(
-            INITIAL_GUESTS.map(g => ({
-              id: g.id,
-              name: g.name,
-              slug: g.slug,
-              ranch_id: g.ranchId,
-              check_in_date: g.checkInDate,
-              check_out_date: g.checkOutDate,
-              is_always_unlocked: g.isAlwaysUnlocked
-            }))
-          );
+          const resetSeedWithPhone = INITIAL_GUESTS.map(g => ({
+            id: g.id,
+            name: g.name,
+            slug: g.slug,
+            ranch_id: g.ranchId,
+            check_in_date: g.checkInDate,
+            check_out_date: g.checkOutDate,
+            is_always_unlocked: g.isAlwaysUnlocked,
+            phone: g.phone || null
+          }));
+
+          const { error: resetInsertError } = await supabase.from("guests").insert(resetSeedWithPhone);
+          if (resetInsertError) {
+            if (resetInsertError.message.includes("phone") || resetInsertError.message.includes("column") || resetInsertError.code === "42703") {
+              const resetSeedWithoutPhone = INITIAL_GUESTS.map(g => ({
+                id: g.id,
+                name: g.name,
+                slug: g.slug,
+                ranch_id: g.ranchId,
+                check_in_date: g.checkInDate,
+                check_out_date: g.checkOutDate,
+                is_always_unlocked: g.isAlwaysUnlocked
+              }));
+              await supabase.from("guests").insert(resetSeedWithoutPhone);
+            } else {
+              throw resetInsertError;
+            }
+          }
         } catch (err) {
           console.error("Erro ao resetar banco no Supabase:", err);
         } finally {

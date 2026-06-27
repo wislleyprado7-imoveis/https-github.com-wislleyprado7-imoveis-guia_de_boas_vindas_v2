@@ -27,7 +27,8 @@ import {
   AlertTriangle,
   UserPlus,
   Compass,
-  ArrowLeft
+  ArrowLeft,
+  MessageCircle
 } from "lucide-react";
 import QRCodeModal from "./QRCodeModal";
 import { formatDateBr } from "../utils";
@@ -74,6 +75,7 @@ export default function AdminPanel({
     new Date(Date.now() + 2 * 24 * 60 * 60 * 1000).toISOString().split("T")[0]
   );
   const [newGuestAlwaysUnlocked, setNewGuestAlwaysUnlocked] = useState(false);
+  const [newGuestPhone, setNewGuestPhone] = useState("");
   const [guestEditId, setGuestEditId] = useState<string | null>(null);
 
   // Ranch Creation Form State
@@ -114,7 +116,8 @@ export default function AdminPanel({
               ranchId: newGuestRanchId,
               checkInDate: newGuestCheckIn,
               checkOutDate: newGuestCheckOut,
-              isAlwaysUnlocked: newGuestAlwaysUnlocked
+              isAlwaysUnlocked: newGuestAlwaysUnlocked,
+              phone: newGuestPhone
             }
           : g
       );
@@ -128,7 +131,8 @@ export default function AdminPanel({
         ranchId: newGuestRanchId,
         checkInDate: newGuestCheckIn,
         checkOutDate: newGuestCheckOut,
-        isAlwaysUnlocked: newGuestAlwaysUnlocked
+        isAlwaysUnlocked: newGuestAlwaysUnlocked,
+        phone: newGuestPhone
       };
       onUpdateGuests([...guests, newG]);
     }
@@ -139,6 +143,7 @@ export default function AdminPanel({
     setNewGuestName("");
     setNewGuestSlug("");
     setNewGuestAlwaysUnlocked(false);
+    setNewGuestPhone("");
   };
 
   const startEditGuest = (g: Guest) => {
@@ -149,7 +154,43 @@ export default function AdminPanel({
     setNewGuestCheckIn(g.checkInDate);
     setNewGuestCheckOut(g.checkOutDate);
     setNewGuestAlwaysUnlocked(g.isAlwaysUnlocked);
+    setNewGuestPhone(g.phone || "");
     setIsAddingGuest(true);
+  };
+
+  const handleSendWhatsApp = (g: Guest, r: Ranch | undefined, link: string) => {
+    let phone = g.phone || "";
+    
+    if (!phone.trim()) {
+      const typedPhone = window.prompt("Digite o número do WhatsApp do hóspede (com DDD, ex: 17991234567):");
+      if (typedPhone === null) return; // Cancelado
+      if (typedPhone.trim()) {
+        phone = typedPhone.trim();
+        // Atualiza na lista de hóspedes em tempo real
+        const updated = guests.map(item => 
+          item.id === g.id ? { ...item, phone: typedPhone.trim() } : item
+        );
+        onUpdateGuests(updated);
+      } else {
+        alert("Número de WhatsApp é necessário para enviar a mensagem.");
+        return;
+      }
+    }
+
+    const cleanPhone = phone.replace(/\D/g, "");
+    let targetPhone = cleanPhone;
+    if (cleanPhone && cleanPhone.length <= 11) {
+      targetPhone = `55${cleanPhone}`;
+    }
+
+    const checkIn = formatDateBr(g.checkInDate);
+    const checkOut = formatDateBr(g.checkOutDate);
+    const ranchName = r?.name || "Rancho";
+
+    const message = `Olá, *${g.name}*! 🌾🚣‍♂️\n\nSeja muito bem-vindo(a) ao *${ranchName}*!\n\nPara garantir que você tenha a melhor experiência possível durante a sua estadia (de ${checkIn} a ${checkOut}), preparamos um *Guia Digital de Boas-Vindas* exclusivo para você.\n\nNo guia, você encontrará:\n🔑 Instruções completas de Check-in e senha do Wi-Fi\n📍 Como chegar com mapa interativo e rotas integradas\n📋 Normas da casa e itens inclusos\n🎣 Dicas de pesca exclusivas e melhores marés\n🍽️ Recomendações de restaurantes e comércios locais\n📞 Telefones úteis e contatos de emergência\n\nAcesse seu guia personalizado no link abaixo:\n👉 ${link}\n\nDesejamos uma excelente estadia e ótimas pescarias! 🎣✨`;
+
+    const whatsappUrl = `https://api.whatsapp.com/send?phone=${targetPhone}&text=${encodeURIComponent(message)}`;
+    window.open(whatsappUrl, "_blank");
   };
 
   const handleDeleteGuest = (id: string) => {
@@ -1355,6 +1396,7 @@ export default function AdminPanel({
                   setNewGuestCheckIn(new Date().toISOString().split("T")[0]);
                   setNewGuestCheckOut(new Date(Date.now() + 2 * 24 * 60 * 60 * 1000).toISOString().split("T")[0]);
                   setNewGuestAlwaysUnlocked(false);
+                  setNewGuestPhone("");
                   setIsAddingGuest(true);
                 }}
                 className="py-2.5 px-4 rounded-xl bg-gold hover:bg-gold/90 text-white font-sans font-semibold text-xs transition-all shadow-sm flex items-center gap-2"
@@ -1372,7 +1414,7 @@ export default function AdminPanel({
                 {guestEditId ? "Editar Informações do Hóspede" : "Registrar Nova Estadia"}
               </h4>
 
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
                 <div>
                   <label className="text-[10px] text-slate-400 uppercase block mb-1 font-semibold">Nome Completo do Hóspede</label>
                   <input
@@ -1398,6 +1440,17 @@ export default function AdminPanel({
                       className="flex-1 text-xs bg-transparent p-3 text-white focus:outline-none font-mono"
                     />
                   </div>
+                </div>
+
+                <div>
+                  <label className="text-[10px] text-slate-400 uppercase block mb-1 font-semibold">WhatsApp / Telefone</label>
+                  <input
+                    type="text"
+                    placeholder="Ex: 17991234567"
+                    value={newGuestPhone}
+                    onChange={e => setNewGuestPhone(e.target.value)}
+                    className="w-full text-xs bg-slate-950 border border-slate-800 rounded-xl p-3 text-white focus:outline-none focus:border-amber-500 font-mono"
+                  />
                 </div>
 
                 <div>
@@ -1543,6 +1596,12 @@ export default function AdminPanel({
                             <span>Slug de Acesso:</span>
                             <span className="font-mono text-amber-500">/g/{g.slug}</span>
                           </div>
+                          {g.phone && (
+                            <div className="flex justify-between">
+                              <span>WhatsApp:</span>
+                              <span className="text-slate-200 font-mono font-medium">{g.phone}</span>
+                            </div>
+                          )}
                         </div>
                       </div>
 
@@ -1570,6 +1629,16 @@ export default function AdminPanel({
                             )}
                           </button>
                         </div>
+
+                        {/* WhatsApp Send Button */}
+                        <button
+                          type="button"
+                          onClick={() => handleSendWhatsApp(g, r, guestLink)}
+                          className="w-full py-2 px-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-sans font-bold text-xs transition-all shadow-sm flex items-center justify-center gap-2 cursor-pointer active:scale-[0.98]"
+                        >
+                          <MessageCircle size={14} strokeWidth={2.3} />
+                          <span>Enviar Guia pelo WhatsApp</span>
+                        </button>
 
                         {/* Trigger buttons */}
                         <div className="grid grid-cols-3 gap-2">
