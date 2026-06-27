@@ -16,6 +16,8 @@ export const DEFAULT_GUIDE_CONTENT: GuideContent = {
   
   googleMapsLink: "https://maps.google.com/?q=Rio+Grande+Fronteira+MG",
   arrivalInstructions: "Siga pela Rodovia BR-364 sentido Fronteira-MG. Após a ponte do Rio Grande, vire à direita na primeira saída de terra (estrada do Condomínio Porto Real). Siga por 4km acompanhando as placas indicando 'Porto Real'. O Rancho Dourado é a casa número 12, logo após a guarita.",
+  latitude: "-20.2819",
+  longitude: "-49.2001",
   
   wifiSsid: "Rancho_Dourado_5G",
   wifiPassword: "pesca_esportiva_2026",

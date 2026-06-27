@@ -411,6 +411,22 @@ export default function GuestGuide({ guest, ranch, onBackToAdmin }: GuestGuidePr
                   {content.arrivalInstructions}
                 </p>
 
+                {content.latitude && content.longitude && (
+                  <div className="w-full h-48 rounded-2xl overflow-hidden border border-slate-800/80 bg-slate-950 relative shadow-inner">
+                    <iframe
+                      title="Mapa Interativo do Rancho"
+                      width="100%"
+                      height="100%"
+                      frameBorder="0"
+                      scrolling="no"
+                      marginHeight={0}
+                      marginWidth={0}
+                      src={`https://maps.google.com/maps?q=${content.latitude.trim()},${content.longitude.trim()}&t=&z=14&ie=UTF8&iwloc=&output=embed`}
+                      className="absolute inset-0 w-full h-full filter invert brightness-90 contrast-100"
+                    ></iframe>
+                  </div>
+                )}
+
                 <a
                   href={content.googleMapsLink}
                   target="_blank"

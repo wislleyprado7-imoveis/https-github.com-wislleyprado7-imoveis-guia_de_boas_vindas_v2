@@ -44,6 +44,8 @@ export interface GuideContent {
   // Localização
   googleMapsLink: string;
   arrivalInstructions: string;
+  latitude?: string;
+  longitude?: string;
 
   // Wi-Fi
   wifiSsid: string;

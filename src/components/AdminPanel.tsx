@@ -668,6 +668,28 @@ export default function AdminPanel({
                         className="w-full text-xs bg-slate-950 border border-slate-800 rounded-lg p-3 text-white focus:outline-none focus:border-amber-500 font-mono"
                       />
                     </div>
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <label className="text-[10px] text-slate-400 uppercase tracking-wider block mb-1">Latitude (Coordenada Gps)</label>
+                        <input
+                          type="text"
+                          placeholder="Ex: -20.2819"
+                          value={selectedRanch.guideContent.latitude || ""}
+                          onChange={e => updateGuideField("latitude", e.target.value)}
+                          className="w-full text-xs bg-slate-950 border border-slate-800 rounded-lg p-3 text-white focus:outline-none focus:border-amber-500 font-mono"
+                        />
+                      </div>
+                      <div>
+                        <label className="text-[10px] text-slate-400 uppercase tracking-wider block mb-1">Longitude (Coordenada Gps)</label>
+                        <input
+                          type="text"
+                          placeholder="Ex: -49.2001"
+                          value={selectedRanch.guideContent.longitude || ""}
+                          onChange={e => updateGuideField("longitude", e.target.value)}
+                          className="w-full text-xs bg-slate-950 border border-slate-800 rounded-lg p-3 text-white focus:outline-none focus:border-amber-500 font-mono"
+                        />
+                      </div>
+                    </div>
                     <div>
                       <label className="text-[10px] text-slate-400 uppercase tracking-wider block mb-1">Instruções de Rota / Como Chegar</label>
                       <textarea
