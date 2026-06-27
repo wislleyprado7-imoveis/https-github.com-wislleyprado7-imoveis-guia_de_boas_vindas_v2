@@ -29,6 +29,7 @@ export interface GuideContent {
   heroTitle: string;
   heroSubtitle: string;
   heroImageUrl: string;
+  galleryImages?: string[];
 
   // Boas-vindas
   welcomeMessage: string;

@@ -589,6 +589,162 @@ export default function AdminPanel({
                         <h4 className="text-sm font-bold text-white">{selectedRanch.guideContent.heroTitle}</h4>
                       </div>
                     </div>
+
+                    {/* GALLERY IMAGES */}
+                    <div className="pt-6 border-t border-slate-800 space-y-4">
+                      <div>
+                        <h4 className="text-xs font-bold text-amber-500 uppercase tracking-widest">
+                          Carrossel de Imagens (Galeria)
+                        </h4>
+                        <p className="text-[10px] text-slate-400 mt-1">
+                          Adicione múltiplas fotos de alta qualidade do rancho. Elas aparecerão no cabeçalho interativo do Guia do Hóspede.
+                        </p>
+                      </div>
+
+                      {/* Add Image URL Direct Form */}
+                      <div className="flex gap-2">
+                        <input
+                          type="text"
+                          placeholder="Link da foto (Ex: https://images.unsplash.com/...)"
+                          id="new-gallery-image-url"
+                          className="flex-1 text-xs bg-slate-950 border border-slate-800 rounded-lg p-3 text-white focus:outline-none focus:border-amber-500 font-mono"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => {
+                            const input = document.getElementById("new-gallery-image-url") as HTMLInputElement;
+                            if (input && input.value.trim()) {
+                              const currentGallery = selectedRanch.guideContent.galleryImages || [];
+                              const updatedGallery = [...currentGallery, input.value.trim()];
+                              updateGuideField("galleryImages", updatedGallery);
+                              input.value = "";
+                            }
+                          }}
+                          className="bg-amber-500 hover:bg-amber-600 text-slate-950 px-4 py-2.5 rounded-lg text-xs font-bold transition-colors cursor-pointer"
+                        >
+                          Adicionar URL
+                        </button>
+                      </div>
+
+                      {/* Image Uploader for Gallery */}
+                      <div className="bg-slate-950/40 p-4 rounded-xl border border-slate-800/60">
+                        <label className="text-[10px] text-amber-500 font-semibold uppercase tracking-wider block mb-1.5">
+                          Fazer Upload de Nova Foto para o Carrossel
+                        </label>
+                        <ImageUploader
+                          currentUrl=""
+                          onUploadSuccess={(url) => {
+                            if (url) {
+                              const currentGallery = selectedRanch.guideContent.galleryImages || [];
+                              const updatedGallery = [...currentGallery, url];
+                              updateGuideField("galleryImages", updatedGallery);
+                            }
+                          }}
+                          bucketName="ranch-images"
+                          label="Adicionar Foto por Upload"
+                        />
+                      </div>
+
+                      {/* Thumbnail List Grid */}
+                      <div className="space-y-2">
+                        <label className="text-[10px] text-slate-400 uppercase tracking-wider block">
+                          Fotos Atuais do Carrossel ({ (selectedRanch.guideContent.galleryImages || []).length })
+                        </label>
+
+                        { (selectedRanch.guideContent.galleryImages || []).length === 0 ? (
+                          <div className="text-xs text-slate-500 italic bg-slate-950/30 p-4 rounded-xl border border-slate-900 text-center">
+                            Nenhuma foto na galeria do carrossel. O guia usará a Imagem da Capa principal por padrão.
+                          </div>
+                        ) : (
+                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                            {(selectedRanch.guideContent.galleryImages || []).map((img, idx) => (
+                              <div
+                                key={idx}
+                                className="bg-slate-950 border border-slate-800 rounded-xl p-2.5 flex items-center gap-3 relative group animate-fade-in"
+                              >
+                                <div className="w-14 h-14 rounded-lg overflow-hidden border border-slate-800 bg-slate-900 shrink-0">
+                                  <img
+                                    src={img}
+                                    alt={`Foto ${idx + 1}`}
+                                    className="w-full h-full object-cover"
+                                    referrerPolicy="no-referrer"
+                                  />
+                                </div>
+                                <div className="flex-1 min-w-0 space-y-1.5">
+                                  <span className="text-[9px] font-mono text-amber-500 block truncate" title={img}>
+                                    Foto {idx + 1} {selectedRanch.guideContent.heroImageUrl === img && "⭐ (Capa)"}
+                                  </span>
+                                  
+                                  {/* Actions */}
+                                  <div className="flex items-center gap-1.5">
+                                    {/* Move left/up */}
+                                    <button
+                                      type="button"
+                                      disabled={idx === 0}
+                                      onClick={() => {
+                                        const gallery = [...(selectedRanch.guideContent.galleryImages || [])];
+                                        const temp = gallery[idx];
+                                        gallery[idx] = gallery[idx - 1];
+                                        gallery[idx - 1] = temp;
+                                        updateGuideField("galleryImages", gallery);
+                                      }}
+                                      className="p-1 rounded bg-slate-900 hover:bg-slate-800 text-slate-400 hover:text-white disabled:opacity-40 transition-colors cursor-pointer"
+                                      title="Mover para cima"
+                                    >
+                                      ▲
+                                    </button>
+
+                                    {/* Move right/down */}
+                                    <button
+                                      type="button"
+                                      disabled={idx === (selectedRanch.guideContent.galleryImages || []).length - 1}
+                                      onClick={() => {
+                                        const gallery = [...(selectedRanch.guideContent.galleryImages || [])];
+                                        const temp = gallery[idx];
+                                        gallery[idx] = gallery[idx + 1];
+                                        gallery[idx + 1] = temp;
+                                        updateGuideField("galleryImages", gallery);
+                                      }}
+                                      className="p-1 rounded bg-slate-900 hover:bg-slate-800 text-slate-400 hover:text-white disabled:opacity-40 transition-colors cursor-pointer"
+                                      title="Mover para baixo"
+                                    >
+                                      ▼
+                                    </button>
+
+                                    {/* Set as Cover */}
+                                    {selectedRanch.guideContent.heroImageUrl !== img && (
+                                      <button
+                                        type="button"
+                                        onClick={() => updateGuideField("heroImageUrl", img)}
+                                        className="py-0.5 px-1.5 rounded bg-amber-500/10 hover:bg-amber-500 text-amber-500 hover:text-slate-950 text-[9px] font-semibold transition-colors cursor-pointer"
+                                        title="Definir como imagem de capa padrão"
+                                      >
+                                        Usar Capa
+                                      </button>
+                                    )}
+
+                                    {/* Delete */}
+                                    <button
+                                      type="button"
+                                      onClick={() => {
+                                        if (confirm("Deseja remover esta imagem da galeria?")) {
+                                          const gallery = (selectedRanch.guideContent.galleryImages || []).filter((_, i) => i !== idx);
+                                          updateGuideField("galleryImages", gallery);
+                                        }
+                                      }}
+                                      className="p-1 rounded bg-rose-500/10 hover:bg-rose-500 text-rose-400 hover:text-white transition-colors ml-auto cursor-pointer"
+                                      title="Remover foto"
+                                    >
+                                      <Trash2 size={11} />
+                                    </button>
+                                  </div>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    </div>
                   </div>
                 </div>
               )}

@@ -4,6 +4,13 @@ export const DEFAULT_GUIDE_CONTENT: GuideContent = {
   heroTitle: "Rancho Dourado",
   heroSubtitle: "Seu refúgio premium de pesca e lazer no Rio Grande",
   heroImageUrl: "https://images.unsplash.com/photo-1544551763-46a013bb70d5?auto=format&fit=crop&w=1200&q=80",
+  galleryImages: [
+    "https://images.unsplash.com/photo-1544551763-46a013bb70d5?auto=format&fit=crop&w=1200&q=80",
+    "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1200&q=80",
+    "https://images.unsplash.com/photo-1469474968028-56623f02e42e?auto=format&fit=crop&w=1200&q=80",
+    "https://images.unsplash.com/photo-1516467508483-a7212febe31a?auto=format&fit=crop&w=1200&q=80",
+    "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?auto=format&fit=crop&w=1200&q=80"
+  ],
   
   welcomeMessage: "Olá! É uma honra receber você no Rancho Dourado. Preparamos este espaço com muito carinho para que você, sua família e amigos tenham momentos inesquecíveis. Aqui o ritmo é ditado pela natureza. Aproveite a pescaria, curta o pôr do sol na beira do rio e descanse! Se precisar de qualquer coisa, estou à disposição.",
   welcomePhotoUrl: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&q=80",
@@ -148,6 +155,12 @@ export const INITIAL_RANCHES: Ranch[] = [
       heroTitle: "Rancho Tucunaré",
       heroSubtitle: "Aventuras de pesca esportiva e conforto com vista panorâmica",
       heroImageUrl: "https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?auto=format&fit=crop&w=1200&q=80",
+      galleryImages: [
+        "https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?auto=format&fit=crop&w=1200&q=80",
+        "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?auto=format&fit=crop&w=1200&q=80",
+        "https://images.unsplash.com/photo-1500627869374-130d8c83016a?auto=format&fit=crop&w=1200&q=80",
+        "https://images.unsplash.com/photo-1447752875215-b2761acb3c5d?auto=format&fit=crop&w=1200&q=80"
+      ],
     }
   }
 ];

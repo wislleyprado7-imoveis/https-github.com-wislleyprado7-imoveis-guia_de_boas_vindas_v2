@@ -22,6 +22,7 @@ import {
 } from "lucide-react";
 import { Guest, Ranch } from "../types";
 import { getStayStatus, formatDateBr, StayStatus } from "../utils";
+import RanchImageCarousel from "./RanchImageCarousel";
 
 interface GuestGuideProps {
   guest: Guest;
@@ -177,24 +178,12 @@ export default function GuestGuide({ guest, ranch, onBackToAdmin }: GuestGuidePr
               exit={{ opacity: 0, y: -10 }}
               className="space-y-6 pt-4 flex-1"
             >
-              {/* Cover Card with Swiss layout style */}
-              <div className="relative rounded-3xl overflow-hidden shadow-2xl group border border-slate-900 aspect-video">
-                <img
-                  src={content.heroImageUrl}
-                  alt={content.heroTitle}
-                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                  referrerPolicy="no-referrer"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/40 to-transparent flex flex-col justify-end p-6">
-                  <span className="text-[10px] uppercase tracking-widest text-amber-500 font-semibold mb-1">Boas-vindas Premium</span>
-                  <h1 className="font-sans font-bold text-2xl tracking-tight text-white mb-1">
-                    {content.heroTitle}
-                  </h1>
-                  <p className="text-xs text-slate-300 font-sans font-light leading-snug">
-                    {content.heroSubtitle}
-                  </p>
-                </div>
-              </div>
+              {/* Cover Card with dynamic image carousel */}
+              <RanchImageCarousel 
+                images={content.galleryImages || (content.heroImageUrl ? [content.heroImageUrl] : [])} 
+                title={content.heroTitle} 
+                subtitle={content.heroSubtitle} 
+              />
 
               {/* Stay Duration Widget */}
               <div className="bg-slate-900/50 border border-slate-900 rounded-2xl p-4 flex items-center justify-between">
