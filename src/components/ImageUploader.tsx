@@ -1,6 +1,6 @@
 import React, { useState, useRef } from "react";
-import { supabase } from "../supabaseClient";
-import { Upload, Loader2, AlertCircle, Check, Database as DbIcon, Cloud, HelpCircle } from "lucide-react";
+import { supabase, deleteRanchImage } from "../supabaseClient";
+import { Upload, Loader2, AlertCircle, Check, Database as DbIcon, Cloud, HelpCircle, Trash2, Image as ImageIcon } from "lucide-react";
 
 interface ImageUploaderProps {
   currentUrl: string;
@@ -81,6 +81,9 @@ export const ImageUploader: React.FC<ImageUploaderProps> = ({
         throw new Error("O arquivo deve ser uma imagem válida (PNG, JPG, JPEG, WEBP, etc.)");
       }
 
+      // Guard the old URL to delete it if it is a Supabase Storage URL
+      const oldUrl = currentUrl;
+
       // 1. Process client-side compression/resize first for either method
       const base64Url = await compressAndResizeImage(file);
 
@@ -88,6 +91,12 @@ export const ImageUploader: React.FC<ImageUploaderProps> = ({
         // Direct Base64 database injection (no Supabase Storage config required)
         onUploadSuccess(base64Url);
         setSuccess(true);
+        
+        // Try to delete old image from storage if it was a Supabase Storage image
+        if (oldUrl && oldUrl.includes(`/public/${bucketName}/`)) {
+          await deleteRanchImage(oldUrl);
+        }
+
         setTimeout(() => setSuccess(false), 3000);
       } else {
         // Supabase Cloud Storage Upload
@@ -118,8 +127,15 @@ export const ImageUploader: React.FC<ImageUploaderProps> = ({
           .from(bucketName)
           .getPublicUrl(filePath);
 
+        // Success! Save new URL
         onUploadSuccess(publicUrl);
         setSuccess(true);
+
+        // Delete old image from storage to keep the bucket clean and prevent orphan files
+        if (oldUrl && oldUrl.includes(`/public/${bucketName}/`)) {
+          await deleteRanchImage(oldUrl);
+        }
+
         setTimeout(() => setSuccess(false), 3000);
       }
     } catch (err: any) {
@@ -130,13 +146,45 @@ export const ImageUploader: React.FC<ImageUploaderProps> = ({
     }
   };
 
-  const handleFallbackToDb = () => {
+  const handleFallbackToDb = async () => {
     if (lastCompressedBase64) {
+      const oldUrl = currentUrl;
       onUploadSuccess(lastCompressedBase64);
       setSuccess(true);
       setError(null);
       setLastCompressedBase64(null);
+
+      // Clean up old storage image if applicable
+      if (oldUrl && oldUrl.includes(`/public/${bucketName}/`)) {
+        await deleteRanchImage(oldUrl);
+      }
+
       setTimeout(() => setSuccess(false), 3000);
+    }
+  };
+
+  const handleRemoveImage = async (e: React.MouseEvent) => {
+    e.stopPropagation(); // Avoid triggering file selection dialog
+    if (window.confirm("Deseja mesmo remover a imagem atual?")) {
+      try {
+        setUploading(true);
+        const oldUrl = currentUrl;
+        
+        // 1. Clear database field
+        onUploadSuccess("");
+        
+        // 2. If it was stored in Supabase Storage, delete the file from the bucket
+        if (oldUrl && oldUrl.includes(`/public/${bucketName}/`)) {
+          await deleteRanchImage(oldUrl);
+        }
+        
+        setSuccess(true);
+        setTimeout(() => setSuccess(false), 2000);
+      } catch (err) {
+        console.error("Erro ao remover imagem:", err);
+      } finally {
+        setUploading(false);
+      }
     }
   };
 
@@ -174,6 +222,35 @@ export const ImageUploader: React.FC<ImageUploaderProps> = ({
 
   return (
     <div className="space-y-3">
+      {/* Current Image Preview & Quick Actions */}
+      {currentUrl && (
+        <div className="flex items-center gap-3 bg-slate-900/60 p-3 rounded-xl border border-slate-800/80 mb-1">
+          <div className="w-16 h-16 rounded-lg overflow-hidden border border-slate-700 bg-slate-950 shrink-0 relative group">
+            <img 
+              src={currentUrl} 
+              alt="Miniatura atual" 
+              className="w-full h-full object-cover" 
+              referrerPolicy="no-referrer"
+            />
+          </div>
+          <div className="flex-1 min-w-0">
+            <span className="text-[10px] font-semibold text-amber-500 uppercase tracking-widest block">Imagem Configurada</span>
+            <span className="text-xs text-slate-300 font-mono block truncate mt-0.5" title={currentUrl}>
+              {currentUrl.startsWith("data:") ? "Texto Comprimido (Banco)" : currentUrl}
+            </span>
+          </div>
+          <button
+            type="button"
+            onClick={handleRemoveImage}
+            disabled={uploading}
+            className="p-2 bg-rose-500/10 hover:bg-rose-500 text-rose-400 hover:text-white rounded-lg transition-all cursor-pointer group shrink-0"
+            title="Deletar imagem atual e limpar"
+          >
+            <Trash2 size={15} />
+          </button>
+        </div>
+      )}
+
       {/* Method selector tab */}
       <div className="flex items-center justify-between gap-2 bg-slate-900 border border-slate-800 rounded-xl p-1 text-[11px] font-sans">
         <button
