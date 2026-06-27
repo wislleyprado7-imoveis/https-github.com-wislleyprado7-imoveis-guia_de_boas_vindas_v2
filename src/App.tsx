@@ -3,7 +3,7 @@ import { Ranch, Guest, GuideContent } from "./types";
 import { INITIAL_RANCHES, INITIAL_GUESTS } from "./defaultData";
 import AdminPanel from "./components/AdminPanel";
 import GuestGuide from "./components/GuestGuide";
-import { Sparkles, FileText, Compass, AlertCircle, RefreshCw, Database, CheckCircle, XCircle } from "lucide-react";
+import { Sparkles, FileText, Compass, AlertCircle, RefreshCw, Database, CheckCircle, XCircle, Lock, Unlock, LogIn } from "lucide-react";
 import { supabase } from "./supabaseClient";
 
 export default function App() {
@@ -12,6 +12,13 @@ export default function App() {
   const [guests, setGuests] = useState<Guest[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [connectionStatus, setConnectionStatus] = useState<"connecting" | "connected" | "offline">("connecting");
+
+  // --- Admin Authentication State ---
+  const [isAdminAuthenticated, setIsAdminAuthenticated] = useState(() => {
+    return sessionStorage.getItem("rancho_admin_auth") === "true";
+  });
+  const [passwordInput, setPasswordInput] = useState("");
+  const [passwordError, setPasswordError] = useState("");
 
   // Load from Supabase with localStorage backup fallback
   useEffect(() => {
@@ -232,17 +239,20 @@ export default function App() {
 
   // Helper to change URL hash programmatically
   const navigateToGuest = (guest: Guest) => {
-    window.location.hash = `#/g/${guest.slug}`;
+    window.location.hash = `#/g/${guest.slug}?preview=true`;
   };
 
   const navigateToAdmin = () => {
     window.location.hash = "";
   };
 
-  // Extract slug from hash: #/g/joao-silva -> joao-silva
+  // Extract slug from hash: #/g/joao-silva?preview=true -> joao-silva
   const getRouteInfo = () => {
     if (currentHash.startsWith("#/g/")) {
-      const slug = currentHash.replace("#/g/", "");
+      let slug = currentHash.replace("#/g/", "");
+      if (slug.includes("?")) {
+        slug = slug.split("?")[0];
+      }
       return { type: "guest", slug };
     }
     return { type: "admin", slug: "" };
@@ -294,6 +304,98 @@ export default function App() {
     );
   }
 
+  const handleAdminLogin = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (passwordInput === "1234" || passwordInput === "rancho123") {
+      sessionStorage.setItem("rancho_admin_auth", "true");
+      setIsAdminAuthenticated(true);
+      setPasswordError("");
+    } else {
+      setPasswordError("Senha incorreta. Tente novamente.");
+    }
+  };
+
+  const handleAdminLogout = () => {
+    sessionStorage.removeItem("rancho_admin_auth");
+    setIsAdminAuthenticated(false);
+    setPasswordInput("");
+  };
+
+  // --- ROUTE: ADMIN LOGIN GATE ---
+  if (route.type === "admin" && !isAdminAuthenticated) {
+    return (
+      <div className="min-h-screen bg-slate-custom flex flex-col items-center justify-center p-4 font-sans text-slate-800 select-none">
+        <div className="max-w-md w-full bg-slate-950 rounded-2xl p-8 border border-slate-800 shadow-2xl relative overflow-hidden">
+          {/* Subtle gold decoration bar */}
+          <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-amber-500 via-yellow-400 to-amber-600"></div>
+          
+          <div className="flex flex-col items-center text-center mb-6">
+            <div className="w-14 h-14 bg-amber-500/15 text-amber-500 rounded-2xl flex items-center justify-center mb-4 border border-amber-500/30 shadow-inner">
+              <Lock size={28} strokeWidth={2} />
+            </div>
+            
+            <span className="text-[10px] text-amber-500 uppercase font-bold tracking-widest bg-amber-500/10 px-2.5 py-1 rounded-full border border-amber-500/20">
+              Guia Rancho V2
+            </span>
+            
+            <h2 className="text-xl font-bold text-white mt-3 font-sans">
+              Acesso Restrito ao Anfitrião
+            </h2>
+            <p className="text-xs text-slate-400 mt-2 leading-relaxed max-w-xs">
+              Para proteger as configurações de seus ranchos, regras de hospedagem, contatos e dados de hóspedes, por favor insira a senha do administrador.
+            </p>
+          </div>
+
+          <form onSubmit={handleAdminLogin} className="space-y-4">
+            <div>
+              <label className="text-[10px] text-slate-400 uppercase tracking-wider block mb-1.5 font-medium">
+                Senha do Administrador
+              </label>
+              <div className="relative">
+                <input
+                  type="password"
+                  placeholder="Digite a senha..."
+                  value={passwordInput}
+                  onChange={(e) => {
+                    setPasswordInput(e.target.value);
+                    setPasswordError("");
+                  }}
+                  className="w-full text-sm bg-slate-900 border border-slate-800 hover:border-slate-700 rounded-xl py-3 px-4 pl-10 text-white placeholder-slate-500 focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500/20 transition-all font-mono"
+                  autoFocus
+                />
+                <Lock className="absolute left-3.5 top-3.5 text-slate-500 w-4 h-4" />
+              </div>
+              
+              {passwordError && (
+                <p className="text-[11px] text-rose-400 mt-2 font-medium flex items-center gap-1 animate-pulse">
+                  <AlertCircle size={12} /> {passwordError}
+                </p>
+              )}
+            </div>
+
+            <button
+              type="submit"
+              className="w-full bg-amber-500 hover:bg-amber-600 text-slate-950 text-xs font-bold uppercase tracking-wider py-3.5 rounded-xl transition-all flex items-center justify-center gap-2 shadow-lg shadow-amber-500/10 cursor-pointer"
+            >
+              <LogIn size={14} strokeWidth={2.5} />
+              <span>Entrar no Painel</span>
+            </button>
+          </form>
+
+          <div className="mt-6 text-center border-t border-slate-900 pt-4">
+            <span className="text-[10px] text-slate-500">
+              Senha padrão de fábrica: <strong className="text-slate-400 font-semibold font-mono">1234</strong> ou <strong className="text-slate-400 font-semibold font-mono">rancho123</strong>
+            </span>
+          </div>
+        </div>
+        
+        <p className="text-[11px] text-slate-400 mt-6">
+          Desenvolvido com padrão de design premium de alta qualidade.
+        </p>
+      </div>
+    );
+  }
+
   // --- ROUTE: ADMIN VIEW ---
   return (
     <div className="relative">
@@ -313,13 +415,22 @@ export default function App() {
             </span>
           )}
         </div>
-        <button
-          onClick={handleResetDatabase}
-          className="flex items-center gap-1 hover:bg-red-50 hover:text-red-600 hover:border-red-200 transition-all bg-white py-1 px-3 rounded-lg border border-slate-200 text-slate-500 text-xs font-semibold cursor-pointer"
-        >
-          <RefreshCw size={11} />
-          <span>Resetar Padrão</span>
-        </button>
+        <div className="flex items-center gap-2 flex-wrap">
+          <button
+            onClick={handleResetDatabase}
+            className="flex items-center gap-1 hover:bg-red-50 hover:text-red-600 hover:border-red-200 transition-all bg-white py-1 px-3 rounded-lg border border-slate-200 text-slate-500 text-xs font-semibold cursor-pointer"
+          >
+            <RefreshCw size={11} />
+            <span>Resetar Padrão</span>
+          </button>
+          <button
+            onClick={handleAdminLogout}
+            className="flex items-center gap-1.5 hover:bg-slate-50 hover:text-navy border border-slate-200 transition-all bg-white py-1 px-3 rounded-lg text-slate-500 text-xs font-semibold cursor-pointer"
+          >
+            <Lock size={11} className="text-amber-500" />
+            <span>Bloquear Painel</span>
+          </button>
+        </div>
       </div>
 
       <AdminPanel

@@ -32,12 +32,15 @@ interface GuestGuideProps {
 export default function GuestGuide({ guest, ranch, onBackToAdmin }: GuestGuideProps) {
   const content = ranch.guideContent;
   
+  // Check if we are in preview mode
+  const isPreview = window.location.href.includes("preview=true");
+
   // Real status based on dates
   const realStatus = getStayStatus(guest);
   
   // Simulation state to allow easy testing of all 3 security modes!
   const [simulatedStatus, setSimulatedStatus] = useState<StayStatus | "REAL">("REAL");
-  const currentStatus = simulatedStatus === "REAL" ? realStatus : simulatedStatus;
+  const currentStatus = isPreview && simulatedStatus !== "REAL" ? simulatedStatus : realStatus;
 
   // Tab State
   const [activeTab, setActiveTab] = useState<"inicio" | "guia" | "pesca" | "recomendacoes" | "emergencia">("inicio");
@@ -71,66 +74,68 @@ export default function GuestGuide({ guest, ranch, onBackToAdmin }: GuestGuidePr
     <div className="min-h-screen bg-slate-custom text-slate-800 flex flex-col font-sans pb-24 selection:bg-gold selection:text-white sleek-guest-guide">
       
       {/* State Override / Simulation Bar */}
-      <div className="bg-slate-900/90 backdrop-blur border-b border-slate-800 text-xs py-2.5 px-4 sticky top-0 z-40 flex flex-wrap items-center justify-between gap-3 shadow-md">
-        <div className="flex items-center gap-2">
-          <span className="inline-block w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-          <span className="font-medium text-slate-300">Modo de Visualização do Hóspede</span>
-        </div>
-        <div className="flex items-center gap-2">
-          <span className="text-slate-400">Simular Estado:</span>
-          <div className="bg-slate-950 border border-slate-800 rounded-lg p-0.5 flex">
-            <button
-              onClick={() => setSimulatedStatus("REAL")}
-              className={`px-2.5 py-1 rounded-md transition-colors ${
-                simulatedStatus === "REAL"
-                  ? "bg-amber-500 text-slate-950 font-semibold"
-                  : "text-slate-400 hover:text-white"
-              }`}
-            >
-              Real ({realStatus})
-            </button>
-            <button
-              onClick={() => setSimulatedStatus("BEFORE")}
-              className={`px-2.5 py-1 rounded-md transition-colors ${
-                simulatedStatus === "BEFORE"
-                  ? "bg-amber-500 text-slate-950 font-semibold"
-                  : "text-slate-400 hover:text-white"
-              }`}
-            >
-              Antes do Check-In
-            </button>
-            <button
-              onClick={() => setSimulatedStatus("DURING")}
-              className={`px-2.5 py-1 rounded-md transition-colors ${
-                simulatedStatus === "DURING"
-                  ? "bg-amber-500 text-slate-950 font-semibold"
-                  : "text-slate-400 hover:text-white"
-              }`}
-            >
-              Durante Estadia
-            </button>
-            <button
-              onClick={() => setSimulatedStatus("AFTER")}
-              className={`px-2.5 py-1 rounded-md transition-colors ${
-                simulatedStatus === "AFTER"
-                  ? "bg-amber-500 text-slate-950 font-semibold"
-                  : "text-slate-400 hover:text-white"
-              }`}
-            >
-              Após Check-Out
-            </button>
+      {isPreview && (
+        <div className="bg-slate-900/90 backdrop-blur border-b border-slate-800 text-xs py-2.5 px-4 sticky top-0 z-40 flex flex-wrap items-center justify-between gap-3 shadow-md">
+          <div className="flex items-center gap-2">
+            <span className="inline-block w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+            <span className="font-medium text-slate-300">Modo de Visualização do Hóspede</span>
           </div>
+          <div className="flex items-center gap-2">
+            <span className="text-slate-400">Simular Estado:</span>
+            <div className="bg-slate-950 border border-slate-800 rounded-lg p-0.5 flex">
+              <button
+                onClick={() => setSimulatedStatus("REAL")}
+                className={`px-2.5 py-1 rounded-md transition-colors ${
+                  simulatedStatus === "REAL"
+                    ? "bg-amber-500 text-slate-950 font-semibold"
+                    : "text-slate-400 hover:text-white"
+                }`}
+              >
+                Real ({realStatus})
+              </button>
+              <button
+                onClick={() => setSimulatedStatus("BEFORE")}
+                className={`px-2.5 py-1 rounded-md transition-colors ${
+                  simulatedStatus === "BEFORE"
+                    ? "bg-amber-500 text-slate-950 font-semibold"
+                    : "text-slate-400 hover:text-white"
+                }`}
+              >
+                Antes do Check-In
+              </button>
+              <button
+                onClick={() => setSimulatedStatus("DURING")}
+                className={`px-2.5 py-1 rounded-md transition-colors ${
+                  simulatedStatus === "DURING"
+                    ? "bg-amber-500 text-slate-950 font-semibold"
+                    : "text-slate-400 hover:text-white"
+                }`}
+              >
+                Durante Estadia
+              </button>
+              <button
+                onClick={() => setSimulatedStatus("AFTER")}
+                className={`px-2.5 py-1 rounded-md transition-colors ${
+                  simulatedStatus === "AFTER"
+                    ? "bg-amber-500 text-slate-950 font-semibold"
+                    : "text-slate-400 hover:text-white"
+                }`}
+              >
+                Após Check-Out
+              </button>
+            </div>
 
-          {onBackToAdmin && (
-            <button
-              onClick={onBackToAdmin}
-              className="ml-3 px-3 py-1 bg-slate-800 hover:bg-slate-700 border border-slate-700 rounded-lg text-amber-500 font-medium transition-colors"
-            >
-              Painel Admin
-            </button>
-          )}
+            {onBackToAdmin && (
+              <button
+                onClick={onBackToAdmin}
+                className="ml-3 px-3 py-1 bg-slate-800 hover:bg-slate-700 border border-slate-700 rounded-lg text-amber-500 font-medium transition-colors"
+              >
+                Painel Admin
+              </button>
+            )}
+          </div>
         </div>
-      </div>
+      )}
 
       {/* Main Content Area */}
       <div className="max-w-md w-full mx-auto px-4 flex-1 flex flex-col">
