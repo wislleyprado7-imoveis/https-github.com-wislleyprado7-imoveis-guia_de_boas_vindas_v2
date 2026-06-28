@@ -143,12 +143,12 @@ export const DEFAULT_GUIDE_CONTENT: GuideContent = {
 
 export const INITIAL_RANCHES: Ranch[] = [
   {
-    id: "rancho-dourado",
+    id: "a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11",
     name: "Rancho Dourado",
     guideContent: DEFAULT_GUIDE_CONTENT
   },
   {
-    id: "rancho-tucunare",
+    id: "b0eebc99-9c0b-4ef8-bb6d-6bb9bd380a22",
     name: "Rancho Tucunaré",
     guideContent: {
       ...DEFAULT_GUIDE_CONTENT,
@@ -167,33 +167,36 @@ export const INITIAL_RANCHES: Ranch[] = [
 
 export const INITIAL_GUESTS: Guest[] = [
   {
-    id: "guest-1",
+    id: "c0eebc99-9c0b-4ef8-bb6d-6bb9bd380a33",
     name: "João Silva",
     slug: "joao-silva",
-    ranchId: "rancho-dourado",
+    ranchId: "a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11",
     checkInDate: new Date().toISOString().split('T')[0], // Hoje
     checkOutDate: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000).toISOString().split('T')[0], // 3 dias a partir de hoje
     isAlwaysUnlocked: false,
     phone: "17991234567"
   },
   {
-    id: "guest-2",
+    id: "d0eebc99-9c0b-4ef8-bb6d-6bb9bd380a44",
     name: "Família Oliveira",
     slug: "familia-oliveira",
-    ranchId: "rancho-tucunare",
+    ranchId: "b0eebc99-9c0b-4ef8-bb6d-6bb9bd380a22",
     checkInDate: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000).toISOString().split('T')[0], // Daqui a 5 dias (Acesso Antecipado)
     checkOutDate: new Date(Date.now() + 8 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
     isAlwaysUnlocked: false,
     phone: "11988887777"
   },
   {
-    id: "guest-3",
+    id: "e0eebc99-9c0b-4ef8-bb6d-6bb9bd380a55",
     name: "Carlos Mendes",
     slug: "carlos-mendes",
-    ranchId: "rancho-dourado",
+    ranchId: "a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11",
     checkInDate: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString().split('T')[0], // Já fez checkout
     checkOutDate: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
     isAlwaysUnlocked: false,
     phone: "34997766554"
   }
 ];
+
+
+

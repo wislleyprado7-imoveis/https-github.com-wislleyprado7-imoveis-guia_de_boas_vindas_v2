@@ -250,9 +250,9 @@ export default function App() {
       if (connectionStatus === "connected") {
         try {
           setIsLoading(true);
-          // Clean existing records
-          await supabase.from("guests").delete().neq("id", "");
-          await supabase.from("ranches").delete().neq("id", "");
+          // Clean existing records in a way compatible with UUID/TEXT columns
+          await supabase.from("guests").delete().gt("created_at", "1970-01-01T00:00:00Z");
+          await supabase.from("ranches").delete().gt("created_at", "1970-01-01T00:00:00Z");
 
           // Seed
           await supabase.from("ranches").insert(

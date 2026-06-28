@@ -31,8 +31,9 @@ import {
   MessageCircle
 } from "lucide-react";
 import QRCodeModal from "./QRCodeModal";
-import { formatDateBr } from "../utils";
+import { formatDateBr, generateUUID } from "../utils";
 import { ImageUploader } from "./ImageUploader";
+
 
 interface AdminPanelProps {
   ranches: Ranch[];
@@ -125,7 +126,7 @@ export default function AdminPanel({
     } else {
       // New Guest
       const newG: Guest = {
-        id: `guest-${Date.now()}`,
+        id: generateUUID(),
         name: newGuestName,
         slug: newGuestSlug,
         ranchId: newGuestRanchId,
@@ -231,9 +232,8 @@ export default function AdminPanel({
       hospitalInfo: "Hospital local a 10km.",
       faqs: [{ question: "Tem barcos?", answer: "Sim, sob consulta." }]
     };
-
     const newR: Ranch = {
-      id: `ranch-${Date.now()}`,
+      id: generateUUID(),
       name: newRanchName,
       guideContent: defaultContent
     };
